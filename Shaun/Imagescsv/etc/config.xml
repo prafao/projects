@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Shaun_Imagescsv>
+            <version>0.1.0</version>
+        </Shaun_Imagescsv>
+    </modules>
+    <global>
+        <models>
+            <imagescsv>
+                <class>Shaun_Imagescsv_Model</class>
+            </imagescsv>
+        </models>
+        <helpers>
+            <imagescsv>
+                <class>Shaun_Imagescsv_Helper</class>
+            </imagescsv>
+        </helpers>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Shaun_Imagescsv after="Mage_Adminhtml">Shaun_Imagescsv_Adminhtml</Shaun_Imagescsv>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <catalog>
+                <children>
+                    <imagescsv_process_images module="imagescsv">
+                        <title>Run Image Csv</title>
+                        <action>adminhtml/imagescsv</action>
+                        <sort_order>999</sort_order>
+                    </imagescsv_process_images>
+                </children>
+            </catalog>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <imagescsv_process_images module="imagescsv">
+                                    <title>Run Image Csv</title>
+                                </imagescsv_process_images>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <imagescsv_process_images>
+                <schedule>
+                    <cron_expr>* */4 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>imagescsv/observer::processImages</model>
+                </run>
+            </imagescsv_process_images>
+        </jobs>
+    </crontab>
+</config>
