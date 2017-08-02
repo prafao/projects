@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Shaun_Stockcsv>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Shaun_Stockcsv>
+    </modules>
+</config>

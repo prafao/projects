@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Shaun_Stockcsv>
+            <version>0.1.0</version>
+        </Shaun_Stockcsv>
+    </modules>
+    <global>
+        <models>
+            <stockcsv>
+                <class>Shaun_Stockcsv_Model</class>
+            </stockcsv>
+        </models>
+        <helpers>
+            <stockcsv>
+                <class>Shaun_Stockcsv_Helper</class>
+            </stockcsv>
+        </helpers>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Shaun_Stockcsv after="Mage_Adminhtml">Shaun_Stockcsv_Adminhtml</Shaun_Stockcsv>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <catalog>
+                <children>
+                    <stockcsv_process_stock module="stockcsv">
+                        <title>Run Stock Csv</title>
+                        <action>adminhtml/stockcsv</action>
+                        <sort_order>999</sort_order>
+                    </stockcsv_process_stock>
+                </children>
+            </catalog>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <stockcsv_process_stock module="stockcsv">
+                                    <title>Run Stock Csv</title>
+                                </stockcsv_process_stock>
+                            </children>
+                        </catalog>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <stockcsv_process_stock>
+                <schedule>
+                    <cron_expr>* */4 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>stockcsv/observer::processStock</model>
+                </run>
+            </stockcsv_process_stock>
+        </jobs>
+    </crontab>
+</config>
