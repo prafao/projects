@@ -52,19 +52,30 @@ class Shaun_Stockcsv_Model_Observer
      */
     private function formatData($stockArray)
     {
-        $allowedGrades = ["Grade AA" => 4, "Grade A+" => 3, "Grade A" => 2, "Grade A-" => 1];
+        $gradeA = array("Grade AA" => 10, "Grade A+" => 9, "Grade A" => 8, "Grade A-" => 7);
+        $gradeB = array("Grade B" => 3, "Cultured" => 2, "" => 1);
         $outputArray = array();
         $stockRanks = array();
 
         foreach ($stockArray as $stockItem) {
-            if (array_key_exists($stockItem[2], $allowedGrades)) {
+            if (array_key_exists($stockItem[2], $gradeA)) {
                 if (!isset($outputArray[$stockItem[0]])) {
-                    $outputArray[$stockItem[0]] = [$stockItem[0], (int)$stockItem[1], $stockItem[2], 1];
-                    $stockRanks[$stockItem[0]] = $allowedGrades[$stockItem[2]];
+                    $outputArray[$stockItem[0]] = array($stockItem[0], (int)$stockItem[1], $stockItem[2], 1);
+                    $stockRanks[$stockItem[0]] = $gradeA[$stockItem[2]];
                 } else {
                     $outputArray[$stockItem[0]][1] += $stockItem[1];
-                    if ($allowedGrades[$stockItem[2]] > $stockRanks[$stockItem[0]]) {
-                        $stockRanks[$stockItem[0]] = $allowedGrades[$stockItem[2]];
+                    if ($gradeA[$stockItem[2]] > $stockRanks[$stockItem[0]]) {
+                        $stockRanks[$stockItem[0]] = $gradeA[$stockItem[2]];
+                        $outputArray[$stockItem[0]][2] = $stockItem[2];
+                    }
+                }
+            } elseif (array_key_exists($stockItem[2], $gradeB)) {
+                if (!isset($outputArray[$stockItem[0]])) {
+                    $outputArray[$stockItem[0]] = array($stockItem[0], 0, $stockItem[2], 1);
+                    $stockRanks[$stockItem[0]] = $gradeB[$stockItem[2]];
+                } else {
+                    if ($gradeB[$stockItem[2]] > $stockRanks[$stockItem[0]]) {
+                        $stockRanks[$stockItem[0]] = $gradeB[$stockItem[2]];
                         $outputArray[$stockItem[0]][2] = $stockItem[2];
                     }
                 }
