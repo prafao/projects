@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Shaun_Csv>
+            <version>0.1.0</version>
+        </Shaun_Csv>
+    </modules>
+    <global>
+        <models>
+            <csv>
+                <class>Shaun_Csv_Model</class>
+            </csv>
+        </models>
+        <helpers>
+            <csv>
+                <class>Shaun_Csv_Helper</class>
+            </csv>
+        </helpers>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Shaun_Csv after="Mage_Adminhtml">Shaun_Csv_Adminhtml</Shaun_Csv>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <catalog>
+                <children>
+                    <csv_process_images module="csv">
+                        <title>Run Image Csv</title>
+                        <action>adminhtml/csv/images</action>
+                        <sort_order>995</sort_order>
+                    </csv_process_images>
+                    <csv_process_stock module="csv">
+                        <title>Run Stock Csv</title>
+                        <action>adminhtml/csv/stock</action>
+                        <sort_order>996</sort_order>
+                    </csv_process_stock>
+                    <csv_process_attributes module="csv">
+                        <title>Run Attributes Csv</title>
+                        <action>adminhtml/csv/attributes</action>
+                        <sort_order>997</sort_order>
+                    </csv_process_attributes>
+                </children>
+            </catalog>
+        </menu>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <catalog>
+                            <children>
+                                <manage_csv_generation module="csv">
+                                    <title>Run csv generation</title>
+                                </manage_csv_generation>
+                            </children>
+                        </catalog>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <csv_settings module="csv">
+                                            <title>Csv Settings</title>
+                                            <sort_order>1</sort_order>
+                                        </csv_settings>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <crontab>
+        <jobs>
+            <csv_process_images>
+                <schedule>
+                    <cron_expr>* */4 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>csv/images::processImages</model>
+                </run>
+            </csv_process_images>
+            <csv_process_stock>
+                <schedule>
+                    <cron_expr>* */4 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>csv/stock::processStock</model>
+                </run>
+            </csv_process_stock>
+            <csv_process_attributesk>
+                <schedule>
+                    <cron_expr>* */4 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>csv/attributes::processAttributes</model>
+                </run>
+            </csv_process_attributesk>
+        </jobs>
+    </crontab>
+</config>

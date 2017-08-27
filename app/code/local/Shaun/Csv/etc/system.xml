@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<config>
+    <tabs>
+        <csv translate="label" module="csv">
+            <label>Csv</label>
+            <sort_order>150</sort_order>
+        </csv>
+    </tabs>
+    <sections>
+        <csv_settings translate="label" module="csv">
+            <class>separator-top</class>
+            <label>Csv Settings</label>
+            <tab>csv</tab>
+            <sort_order>130</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <external_files translate="label">
+                    <label>External Files</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <stock_file translate="label">
+                            <label>Stock file source</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </stock_file>
+                        <attributes_file translate="label">
+                            <label>Attributes file source</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </attributes_file>
+                        <plant_form_file translate="label">
+                            <label>Plant Form file source</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </plant_form_file>
+                        <price_points_file translate="label">
+                            <label>Price Points file source</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </price_points_file>
+                        <description_file translate="label">
+                            <label>Description file source</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </description_file>
+                    </fields>
+                </external_files>
+            </groups>
+        </csv_settings>
+    </sections>
+</config>
