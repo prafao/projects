@@ -67,6 +67,32 @@
                         </description_file>
                     </fields>
                 </external_files>
+                <attributes translate="label">
+                    <label>Attributes CSV Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <fields>
+                        <msrp_multiplier translate="label">
+                            <label>MSRP multiplier</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </msrp_multiplier>
+                        <price_multiplier translate="label">
+                            <label>Price multiplier</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </price_multiplier>
+                    </fields>
+                </attributes>
             </groups>
         </csv_settings>
     </sections>
