@@ -43,9 +43,7 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
         'name',
         'cost',
         'msrp',
-        'msrp_multiplier',
         'price',
-        'price_multiplier',
         'tax_class_id',
         'weight',
         'description',
@@ -69,10 +67,26 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
         'ebay_care_table'
     ];
 
+    protected $msrpMultiplier;
+
+    protected $priceMultiplier;
+
+    public function __construct()
+    {
+        $this->msrpMultiplier = Mage::getStoreConfig('csv_settings/attributes/msrp_multiplier');
+        if (empty($this->msrpMultiplier)) {
+            $this->msrpMultiplier = 2.4;
+        }
+        $this->priceMultiplier = Mage::getStoreConfig('csv_settings/attributes/price_multiplier');
+        if (empty($this->priceMultiplier)) {
+            $this->priceMultiplier = 2;
+        }
+    }
+
     protected function getSource()
     {
         $default = 'http://agrumi.co.uk/inventory/WWW_INV.ASC';
-        $configValue = $configValue = Mage::getStoreConfig('csv_settings/external_files/attributes_file');
+        $configValue = Mage::getStoreConfig('csv_settings/external_files/attributes_file');
 
         return ($configValue) ? $configValue : $default;
     }
@@ -157,10 +171,8 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
             $outputItem['cost'] = $data['L'];
 
             $outputItem['msrp'] = $this->formatMsrp($data, $pricePointsData);
-            $outputItem['msrp_multiplier'] = 2.4;
 
             $outputItem['price'] = $this->formatPrice($data, $pricePointsData);
-            $outputItem['price_multiplier'] = 2;
 
             $outputItem['tax_class_id'] = ($data['O'] == 'T1') ? 2 : 6;
             $outputItem['weight'] = $this->formatWeight($data['D']);
@@ -267,10 +279,15 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
             $string .= $outputItem['latin_name'] . ' / ';
         }
         if (!empty($outputItem['common_name'])) {
-            $string .= $outputItem['common_name'] . ':';
+            $string .= $outputItem['common_name'];
         }
+
+        if (!empty($outputItem['plant_form'])) {
+            $string .= ' ' . $outputItem['plant_form'];
+        }
+
         if (!empty($outputItem['pot_size'])) {
-            $string .= $outputItem['pot_size'] . ':';
+            $string .= ' : ' . $outputItem['pot_size'] . ' : ';
         }
         if (!empty($outputItem['plant_size'])) {
             $string .= $outputItem['plant_size'] . ' High (exc pot)';
@@ -281,10 +298,10 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
 
     private function formatMsrp($data, $pricePointData)
     {
-        $value = $data['L'] * 2.4;
+        $value = $data['L'] * $this->msrpMultiplier;
         $priceArray = [];
         foreach ($pricePointData as $priceData) {
-            $priceArray[] = $priceData[1];
+            $priceArray[] = $priceData[2];
         }
 
         return $this->getClosest($value, $priceArray);
@@ -292,7 +309,7 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
 
     private function formatPrice($data, $pricePointData)
     {
-        $value = $data['L'] * 2;
+        $value = $data['L'] * $this->priceMultiplier;
         $priceArray = [];
         foreach ($pricePointData as $priceData) {
             $priceArray[] = $priceData[2];
@@ -353,13 +370,13 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
             return $outputItem['name'];
         }
 
-        $string = $outputItem['latin_name'] . ' / ' . $outputItem['common_name'] .
-            $outputItem['pot_size'] . $outputItem['plant_size'];
+        $string = $outputItem['latin_name'] . ' / ' . $outputItem['common_name'] . ' ' . $outputItem['plant_form'] . ' ' .
+            $outputItem['pot_size'] . ' ' . $outputItem['plant_size'];
         if (strlen($string) <= 80) {
             return $string;
         }
 
-        $string = $outputItem['latin_name'] . $outputItem['pot_size'] . $outputItem['plant_size'];
+        $string = $outputItem['latin_name'] . ' ' . $outputItem['plant_form'] . ' ' . $outputItem['pot_size'] . ' ' . $outputItem['plant_size'];
         return $string;
     }
 
