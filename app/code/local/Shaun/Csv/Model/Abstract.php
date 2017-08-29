@@ -14,7 +14,7 @@ class Shaun_Csv_Model_Abstract
      */
     public function getData()
     {
-         $this->getFileFromSource();
+        $this->getFileFromSource();
 
         return $this->getCsvData();
     }
@@ -46,6 +46,7 @@ class Shaun_Csv_Model_Abstract
 
         if ($error) {
             Mage::log($error, null, 'process_attributes_cron.log');
+            throw new Exception('Could not download file: ' . $destination);
         }
 
         $file = fopen($destination, "w+");

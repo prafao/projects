@@ -27,6 +27,48 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
         'Q'
     ];
 
+    protected $headerCsv = [
+        'sku',
+        'common_name',
+        'latin_name',
+        'pot_size',
+        'plant_size',
+        'plant_min_height',
+        'plant_max_height',
+        'plant_form',
+        'plant_secondary_size',
+        'plant_trunk_size',
+        'plant_trunk_width',
+        'pot_information',
+        'name',
+        'cost',
+        'msrp',
+        'msrp_multiplier',
+        'price',
+        'price_multiplier',
+        'tax_class_id',
+        'weight',
+        'description',
+        'plant_position',
+        'plant_soil',
+        'plant_rate_of_growth',
+        'plant_hardiness',
+        'Plant_garden_care',
+        'plant_pruning',
+        'plant_other',
+        'plant_season',
+        'plant_colour',
+        'plant_style',
+        'plant_aspect',
+        'image_label',
+        'small_image_label',
+        'thumbnail_label',
+        '_media_label',
+        'ebay_title',
+        'ebay_spec_table',
+        'ebay_care_table'
+    ];
+
     protected function getSource()
     {
         $default = 'http://agrumi.co.uk/inventory/WWW_INV.ASC';
@@ -98,8 +140,10 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
             $outputItem['latin_name'] = $data['Q'];
             $outputItem['pot_size'] = $data['D'];
             $outputItem['plant_size'] = $data['E'];
-            $outputItem['plant_min_height'] = $this->formatMinHeight($data['E']);
-            $outputItem['plant_max_height'] = $this->formatMaxHeight($data['E']);
+            $outputItem['plant_min_height'] = is_numeric($this->formatMinHeight($data['E'])) ?
+                $this->formatMinHeight($data['E']) : '';
+            $outputItem['plant_max_height'] = is_numeric($this->formatMaxHeight($data['E'])) ?
+                $this->formatMaxHeight($data['E']) : '';
 
             $outputItem['plant_form'] = $this->formatPlantForm($data, $plantFormData);
 
@@ -107,37 +151,30 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
             $outputItem['plant_trunk_size'] = $data['H'];
             $outputItem['plant_trunk_width'] = $data['I'];
             $outputItem['pot_information'] = $data['J'];
-            $outputItem['name'] = '';
-            if (!empty($outputItem['latin_name'])) {
-                $outputItem['name'] .= $outputItem['latin_name'] . '/';
-            }
-            if (!empty($outputItem['common_name'])) {
-                $outputItem['name'] .= $outputItem['common_name'] . ':';
-            }
-            if (!empty($outputItem['pot_size'])) {
-                $outputItem['name'] .= $outputItem['pot_size'] . ':';
-            }
-            if (!empty($outputItem['plant_size'])) {
-                $outputItem['name'] .= $outputItem['plant_size'] . ' High (exc pot)';
-            }
+
+            $outputItem['name'] = $this->formatName($outputItem);
+
             $outputItem['cost'] = $data['L'];
 
             $outputItem['msrp'] = $this->formatMsrp($data, $pricePointsData);
+            $outputItem['msrp_multiplier'] = 2.4;
 
             $outputItem['price'] = $this->formatPrice($data, $pricePointsData);
+            $outputItem['price_multiplier'] = 2;
 
             $outputItem['tax_class_id'] = ($data['O'] == 'T1') ? 2 : 6;
             $outputItem['weight'] = $this->formatWeight($data['D']);
 
             $this->fillDescription($outputItem, $data, $descriptionsData);
 
-            $outputItem['Image_label'] = $outputItem['name'];
-            $outputItem['Small_image_label'] = $outputItem['name'];
-            $outputItem['Thumbnail_label'] = $outputItem['name'];
+            $outputItem['image_label'] = $outputItem['name'];
+            $outputItem['small_image_label'] = $outputItem['name'];
+            $outputItem['thumbnail_label'] = $outputItem['name'];
             $outputItem['_media_label'] = $outputItem['name'];
 
-            $outputItem['Ebay_spec_table'] = $this->buildEbaySpecTable($outputItem);
-            $outputItem['Ebay_care_table'] = $this->buildEbayCareTable($outputItem);
+            $outputItem['ebay_title'] = $this->formatEbayTitle($outputItem);
+            $outputItem['ebay_spec_table'] = $this->buildEbaySpecTable($outputItem);
+            $outputItem['ebay_care_table'] = $this->buildEbayCareTable($outputItem);
 
             $outputArray[] = $outputItem;
         }
@@ -160,10 +197,9 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
             }
         }
         $filePath = $csvDirectory . DS . 'attribute.csv';
-        $csvHeaders = array('sku', 'qty', 'plant_grade', 'manage_attribute');
 
         $csvFile = fopen($filePath, 'w');
-        fputcsv($csvFile, $csvHeaders);
+        fputcsv($csvFile, $this->headerCsv);
 
         foreach ($data as $item) {
             fputcsv($csvFile, $item);
@@ -222,6 +258,25 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
         }
 
         return $data['F'];
+    }
+
+    private function formatName($outputItem)
+    {
+        $string = '';
+        if (!empty($outputItem['latin_name'])) {
+            $string .= $outputItem['latin_name'] . ' / ';
+        }
+        if (!empty($outputItem['common_name'])) {
+            $string .= $outputItem['common_name'] . ':';
+        }
+        if (!empty($outputItem['pot_size'])) {
+            $string .= $outputItem['pot_size'] . ':';
+        }
+        if (!empty($outputItem['plant_size'])) {
+            $string .= $outputItem['plant_size'] . ' High (exc pot)';
+        }
+
+        return $string;
     }
 
     private function formatMsrp($data, $pricePointData)
@@ -290,6 +345,22 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
                 break;
             }
         }
+    }
+
+    private function formatEbayTitle($outputItem)
+    {
+        if (strlen($outputItem['name']) <= 80) {
+            return $outputItem['name'];
+        }
+
+        $string = $outputItem['latin_name'] . ' / ' . $outputItem['common_name'] .
+            $outputItem['pot_size'] . $outputItem['plant_size'];
+        if (strlen($string) <= 80) {
+            return $string;
+        }
+
+        $string = $outputItem['latin_name'] . $outputItem['pot_size'] . $outputItem['plant_size'];
+        return $string;
     }
 
     protected function buildEbaySpecTable($outputItem)
