@@ -63,6 +63,10 @@ class Shaun_Csv_Model_Stock extends Shaun_Csv_Model_Abstract
         $stockRanks = array();
 
         foreach ($stockArray as $stockItem) {
+            // don't take into account the items with stock 0
+            if ($stockItem[1] == 0) {
+                continue;
+            }
             if (array_key_exists($stockItem[2], $gradeA)) {
                 if (!isset($outputArray[$stockItem[0]])) {
                     $outputArray[$stockItem[0]] = array($stockItem[0], (int)$stockItem[1], $stockItem[2], 1);

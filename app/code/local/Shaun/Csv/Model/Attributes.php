@@ -67,26 +67,10 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
         'ebay_care_table'
     ];
 
-    protected $msrpMultiplier;
-
-    protected $priceMultiplier;
-
-    public function __construct()
-    {
-        $this->msrpMultiplier = Mage::getStoreConfig('csv_settings/attributes/msrp_multiplier');
-        if (empty($this->msrpMultiplier)) {
-            $this->msrpMultiplier = 2.4;
-        }
-        $this->priceMultiplier = Mage::getStoreConfig('csv_settings/attributes/price_multiplier');
-        if (empty($this->priceMultiplier)) {
-            $this->priceMultiplier = 2;
-        }
-    }
-
     protected function getSource()
     {
         $default = 'http://agrumi.co.uk/inventory/WWW_INV.ASC';
-        $configValue = Mage::getStoreConfig('csv_settings/external_files/attributes_file');
+        $configValue = $configValue = Mage::getStoreConfig('csv_settings/external_files/attributes_file');
 
         return ($configValue) ? $configValue : $default;
     }
@@ -298,7 +282,7 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
 
     private function formatMsrp($data, $pricePointData)
     {
-        $value = $data['L'] * $this->msrpMultiplier;
+        $value = $data['L'] * 2.4;
         $priceArray = [];
         foreach ($pricePointData as $priceData) {
             $priceArray[] = $priceData[2];
@@ -309,7 +293,7 @@ class Shaun_Csv_Model_Attributes extends Shaun_Csv_Model_Abstract
 
     private function formatPrice($data, $pricePointData)
     {
-        $value = $data['L'] * $this->priceMultiplier;
+        $value = $data['L'] * 2;
         $priceArray = [];
         foreach ($pricePointData as $priceData) {
             $priceArray[] = $priceData[2];
