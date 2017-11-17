@@ -49,12 +49,23 @@ class Shaun_Csv_Model_Images
 
         foreach ($imageArray as $image) {
             $pos = strpos($image, '-');
+            if (!$pos) {
+                $pos = strpos($image, '.');
+                $imageNumber = 1;
+            } else {
+                $rest = substr($image, $pos + 1, strlen($image));
+                $imageNumber = substr($rest, 0, strpos($rest, '-'));
+                if (!$imageNumber) {
+                    $imageNumber = substr($rest, 0, strpos($rest, '.'));
+                }
+            }
+
             $sku = substr($image, 0, $pos);
             if (!array_key_exists($sku, $outputArray)) {
                 $outputArray[$sku] = array();
             }
-            $rest = substr($image, $pos + 1, strlen($image));
-            $imageNumber = substr($rest, 0, strpos($rest, '-'));
+
+
             if (is_numeric($imageNumber) && $imageNumber != 1) {
                 if (!array_key_exists('other', $outputArray[$sku])) {
                     $outputArray[$sku]['other'] = array();
