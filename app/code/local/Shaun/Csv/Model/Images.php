@@ -51,7 +51,7 @@ class Shaun_Csv_Model_Images
             $pos = strpos($image, '-');
             if (!$pos) {
                 $pos = strpos($image, '.');
-                $imageNumber = 1;
+                $imageNumber = false;
             } else {
                 $rest = substr($image, $pos + 1, strlen($image));
                 $imageNumber = substr($rest, 0, strpos($rest, '-'));
@@ -65,8 +65,7 @@ class Shaun_Csv_Model_Images
                 $outputArray[$sku] = array();
             }
 
-
-            if (is_numeric($imageNumber) && $imageNumber != 1) {
+            if (is_numeric($imageNumber)) {
                 if (!array_key_exists('other', $outputArray[$sku])) {
                     $outputArray[$sku]['other'] = array();
                 }
